@@ -1,0 +1,11 @@
+.gitignore
+package-lock.json
+package.json
+src/firebase.ts
+src/index.ts
+src/middleware/firebaseAuth.ts
+src/routes/auth.routes.ts
+src/routes/health.routes.ts
+src/routes/protected.routes.ts
+src/routes/users.routes.ts
+tsconfig.json
