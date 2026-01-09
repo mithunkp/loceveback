@@ -13,6 +13,7 @@ export async function verifyFirebaseToken(
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    console.log("Auth Debug: Missing or invalid header:", authHeader);
     return res.status(401).json({ error: "Unauthorized" });
   }
 
@@ -23,6 +24,7 @@ export async function verifyFirebaseToken(
     req.user = decodedToken;
     next();
   } catch (error) {
+    console.error("Firebase Auth Error:", error);
     return res.status(401).json({ error: "Invalid or expired token" });
   }
 }
