@@ -4,7 +4,7 @@ import path from "path";
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
-import admin from "../firebase";
+import admin from "../config/firebase";
 
 async function verifyToken() {
     const token = process.argv[2];
