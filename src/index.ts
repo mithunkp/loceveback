@@ -26,34 +26,33 @@ app.get("/debug-paths", (req, res) => {
   const fs = require('fs');
   const path = require('path');
 
-  const debugInfo = {
+  const debugInfo: any = {
     cwd: process.cwd(),
     __dirname: __dirname,
     NODE_ENV: process.env.NODE_ENV,
-    distExists: fs.existsSync(path.join(process.cwd(), 'dist')),
-    modulesInDist: [],
-    srcExists: fs.existsSync(path.join(process.cwd(), 'src')),
-    modulesInSrc: []
+    srcAuthFiles: [],
+    fileContents: {}
   };
 
   try {
-    if (debugInfo.distExists) {
-      // recursive search or just check first level
-      const modulesPath = path.join(process.cwd(), 'dist', 'modules');
-      if (fs.existsSync(modulesPath)) {
-        debugInfo.modulesInDist = fs.readdirSync(modulesPath, { recursive: true });
+    const srcAuthPath = path.join(process.cwd(), 'src', 'modules', 'auth');
+    if (fs.existsSync(srcAuthPath)) {
+      debugInfo.srcAuthFiles = fs.readdirSync(srcAuthPath);
+
+      // Try to read content from src JS if exists
+      const srcJsPath = path.join(srcAuthPath, 'auth.routes.js');
+      if (fs.existsSync(srcJsPath)) {
+        debugInfo.fileContents['src_auth_routes_js_preview'] = fs.readFileSync(srcJsPath, 'utf-8').substring(0, 500);
       }
     }
-  } catch (e: any) { debugInfo.modulesInDist = e.message }
+  } catch (e: any) { debugInfo.errorSrc = e.message; }
 
   try {
-    if (debugInfo.srcExists) {
-      const modulesPath = path.join(process.cwd(), 'src', 'modules');
-      if (fs.existsSync(modulesPath)) {
-        debugInfo.modulesInSrc = fs.readdirSync(modulesPath, { recursive: true });
-      }
+    const distAuthPath = path.join(process.cwd(), 'dist', 'modules', 'auth', 'auth.routes.js');
+    if (fs.existsSync(distAuthPath)) {
+      debugInfo.fileContents['dist_auth_routes_js_preview'] = fs.readFileSync(distAuthPath, 'utf-8').substring(0, 500);
     }
-  } catch (e: any) { debugInfo.modulesInSrc = e.message }
+  } catch (e: any) { debugInfo.errorDist = e.message; }
 
   res.json(debugInfo);
 });
