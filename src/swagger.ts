@@ -30,7 +30,7 @@ const options: swaggerJsdoc.Options = {
             },
         ],
     },
-    apis: ['./src/modules/**/*.routes.ts'], // Path to the API docs
+    apis: process.env.NODE_ENV === 'production' ? ['./dist/modules/**/*.routes.js'] : ['./src/modules/**/*.routes.ts'], // Path to the API docs
 };
 
 const swaggerSpec = swaggerJsdoc(options);
